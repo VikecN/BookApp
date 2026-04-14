@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org", lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Authors</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #f5f3ef;
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+        }
+
+        .page-header {
+            max-width: 860px;
+            margin: 0 auto 1.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .page-header h1 {
+            font-family: 'Lora', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .page-header p { font-size: 13px; color: #888; margin-top: 3px; }
+
+        .btn-add {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: #fff;
+            background: #3C3489;
+            border: none;
+            border-radius: 8px;
+            padding: 9px 18px;
+            cursor: pointer;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-add:hover { opacity: 0.88; }
+
+        /* Grid */
+        .grid {
+            max-width: 860px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Card */
+        .author-card {
+            background: #fff;
+            border: 1px solid #e8e4df;
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: border-color 0.15s;
+        }
+
+        .author-card:hover { border-color: #ccc; }
+
+        .card-top { display: flex; align-items: center; gap: 12px; }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #EEEDFE;
+            color: #3C3489;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .author-name { font-size: 15px; font-weight: 500; color: #1a1a1a; }
+
+        .bio {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            padding-top: 4px;
+            border-top: 1px solid #e8e4df;
+            align-items: center;
+        }
+
+        .btn-view {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            color: #555;
+            background: transparent;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-edit {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            color: #3C3489;
+            background: #EEEDFE;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-delete {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            color: #c0392b;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            margin-left: auto;
+            padding: 6px 4px;
+        }
+
+        /* Empty state */
+        .empty {
+            max-width: 860px;
+            margin: 5rem auto;
+            text-align: center;
+            color: #aaa;
+        }
+
+        .empty svg { opacity: 0.2; margin-bottom: 12px; }
+        .empty p { font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div>
+        <h1>Authors</h1>
+    </div>
+    <a th:href="@{/authors/new}" class="btn-add">+ Add author</a>
+</div>
+
+<!-- Empty state -->
+<div class="empty" th:if="${authors.isEmpty()}">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+    <p>No authors yet. <a th:href="@{/authors/new}">Add the first one.</a></p>
+</div>
+
+<!-- Authors grid -->
+<div class="grid" th:unless="${authors.isEmpty()}">
+    <div class="author-card" th:each="author : ${authors}">
+
+        <div class="card-top">
+            <!-- Avatar initials from first + last name -->
+            <div class="avatar"
+                 th:text="${#strings.toUpperCase(#strings.substring(author.name, 0, 2))}">
+            </div>
+            <div>
+                <div class="author-name"
+                     th:text="${author.name}"></div>
+            </div>
+        </div>
+
+        <p class="bio" th:text="${author.biography}"></p>
+
+        <div class="card-actions">
+            <a th:href="@{/authors/{id}(id=${author.id})}" class="btn-view">View</a>
+            <a th:href="@{/authors/{id}/edit(id=${author.id})}" class="btn-edit">Edit</a>
+            <form th:action="@{/authors/{id}/delete(id=${author.id})}" method="post"
+                  onsubmit="return confirm('Delete this author?')">
+                <button type="submit" class="btn-delete">Delete</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
