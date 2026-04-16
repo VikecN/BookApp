@@ -20,7 +20,7 @@ public class AuthorService {
     private AuthorMapper authorMapper;
 
     public List<AuthorDTO> getAuthors() {
-        return authorRepo.findAll().stream().map(authorMapper::toViewDTO).toList(); // Replace with actual implementation
+        return authorRepo.findAll().stream().map(authorMapper::toViewDTO).toList();
     }
 
     public AuthorDTO createAuthor(AuthorFormDTO authorFormDTO) {
