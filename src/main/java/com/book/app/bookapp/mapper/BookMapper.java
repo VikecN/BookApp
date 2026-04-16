@@ -19,12 +19,11 @@ public class BookMapper {
         return bookViewDTO;
     }
 
-    public Book toEntity(BookFormDTO bookFormDTO, Author author, String coverImageUrl) {
+    public Book toEntity(BookFormDTO bookFormDTO, Author author) {
         Book book = new Book();
         book.setTitle(bookFormDTO.getTitle());
         book.setIsbn(bookFormDTO.getIsbn());
         book.setAuthor(author);
-        book.setCoverImageUrl(coverImageUrl);
         return book;
     }
 

@@ -1,5 +1,6 @@
 package com.book.app.bookapp.dto;
 
+import com.book.app.bookapp.models.Author;
 import org.springframework.web.multipart.MultipartFile;
 
 

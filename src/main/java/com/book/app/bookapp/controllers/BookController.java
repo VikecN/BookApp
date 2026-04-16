@@ -35,8 +35,8 @@ public class BookController {
 
     @PostMapping
     public String createBook(@ModelAttribute("book") BookFormDTO book, BindingResult result) {
-        System.out.println(book);
+        bookService.createBook(book);
         return "books/form";
-//                bookService.createBook(book);
+
     }
 }
